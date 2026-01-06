@@ -94,6 +94,9 @@
     </div>
 
     <script>
+        // DEBUG
+        alert('Hash: ' + window.location.hash);
+        
         // Legge i parametri dall'hash (#) dell'URL
         const hash = window.location.hash.substring(1);
         const params = new URLSearchParams(hash);
