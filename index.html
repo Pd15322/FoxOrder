@@ -94,40 +94,38 @@
     </div>
 
     <script>
-        // DEBUG
-        alert('Hash: ' + window.location.hash);
-        
-        // Legge i parametri dall'hash (#) dell'URL
-        const hash = window.location.hash.substring(1);
-        const params = new URLSearchParams(hash);
-        
+        // DEBUG - controlla entrambi
+        alert('Hash: ' + window.location.hash + '\nSearch: ' + window.location.search);
+
+        // Prova prima l'hash, poi i query parameters
+        let params;
+        if (window.location.hash) {
+            params = new URLSearchParams(window.location.hash.substring(1));
+        } else {
+            params = new URLSearchParams(window.location.search);
+        }
+
         const type = params.get('type');
         const accessToken = params.get('access_token');
-        
+        const token = params.get('token');
+
         const confirmSection = document.getElementById('confirm-section');
         const resetSection = document.getElementById('reset-section');
-        const errorSection = document.getElementById('error-section');
         const resetButton = document.getElementById('reset-button');
         const manualLink = document.getElementById('manual-link');
 
-        if (type === 'recovery' && accessToken) {
-            // Reset password
+        if (type === 'recovery') {
+            const tokenToUse = accessToken || token;
             confirmSection.classList.add('hidden');
             resetSection.classList.remove('hidden');
-            
-            const deepLink = 'com.foxorder.app://reset?access_token=' + accessToken;
+    
+            const deepLink = 'com.foxorder.app://reset?token=' + tokenToUse;
             resetButton.href = deepLink;
             manualLink.textContent = deepLink;
-            
-            // Prova ad aprire l'app automaticamente
-            setTimeout(() => {
-                window.location.href = deepLink;
-            }, 500);
-            
-        } else if (type === 'signup' || type === 'email_confirmation') {
-            // Conferma email - mostra già di default
+    
+       } else if (type === 'signup' || type === 'email_confirmation') {
             confirmSection.classList.remove('hidden');
-        }
+       }
     </script>
 </body>
 </html>
