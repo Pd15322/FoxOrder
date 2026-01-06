@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Confermata - App Comande</title>
+    <title>FoxOrder</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -26,7 +26,6 @@
         .icon {
             width: 80px;
             height: 80px;
-            background: #4CAF50;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -35,25 +34,97 @@
             font-size: 40px;
             color: white;
         }
+        .icon-success { background: #4CAF50; }
+        .icon-reset { background: #FF9800; }
+        .icon-error { background: #f44336; }
         h1 { color: #333; font-size: 24px; margin-bottom: 15px; }
         p { color: #666; font-size: 16px; line-height: 1.6; }
-        .app-name { color: #2196F3; font-weight: 600; }
+        .app-name { color: #FF9800; font-weight: 600; }
         .instruction {
             background: #f5f5f5;
             border-radius: 10px;
             padding: 20px;
             margin-top: 25px;
         }
+        .button {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 14px 32px;
+            background: #FF9800;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .button:hover { background: #F57C00; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="icon">✓</div>
-        <h1>Email Confermata!</h1>
-        <p>Il tuo account <span class="app-name">App Comande</span> è stato attivato con successo.</p>
-        <div class="instruction">
-            <p>Ora puoi tornare all'app e fare il login con le tue credenziali.</p>
+        <!-- Conferma Email -->
+        <div id="confirm-section">
+            <div class="icon icon-success">✓</div>
+            <h1>Email Confermata!</h1>
+            <p>Il tuo account <span class="app-name">FoxOrder</span> è stato attivato con successo.</p>
+            <div class="instruction">
+                <p>Ora puoi tornare all'app e fare il login con le tue credenziali.</p>
+            </div>
+        </div>
+
+        <!-- Reset Password -->
+        <div id="reset-section" class="hidden">
+            <div class="icon icon-reset">🔐</div>
+            <h1>Reimposta Password</h1>
+            <p>Clicca il pulsante per aprire <span class="app-name">FoxOrder</span> e impostare la nuova password.</p>
+            <a id="reset-button" class="button" href="#">Apri FoxOrder</a>
+            <div class="instruction">
+                <p>Se il pulsante non funziona, copia questo link nel browser del telefono.</p>
+                <p style="word-break: break-all; font-size: 12px; margin-top: 10px; color: #999;" id="manual-link"></p>
+            </div>
+        </div>
+
+        <!-- Errore -->
+        <div id="error-section" class="hidden">
+            <div class="icon icon-error">✕</div>
+            <h1>Link Scaduto</h1>
+            <p>Questo link non è più valido. Richiedi un nuovo link dall'app <span class="app-name">FoxOrder</span>.</p>
         </div>
     </div>
+
+    <script>
+        // Legge i parametri dall'hash (#) dell'URL
+        const hash = window.location.hash.substring(1);
+        const params = new URLSearchParams(hash);
+        
+        const type = params.get('type');
+        const accessToken = params.get('access_token');
+        
+        const confirmSection = document.getElementById('confirm-section');
+        const resetSection = document.getElementById('reset-section');
+        const errorSection = document.getElementById('error-section');
+        const resetButton = document.getElementById('reset-button');
+        const manualLink = document.getElementById('manual-link');
+
+        if (type === 'recovery' && accessToken) {
+            // Reset password
+            confirmSection.classList.add('hidden');
+            resetSection.classList.remove('hidden');
+            
+            const deepLink = 'com.foxorder.app://reset?access_token=' + accessToken;
+            resetButton.href = deepLink;
+            manualLink.textContent = deepLink;
+            
+            // Prova ad aprire l'app automaticamente
+            setTimeout(() => {
+                window.location.href = deepLink;
+            }, 500);
+            
+        } else if (type === 'signup' || type === 'email_confirmation') {
+            // Conferma email - mostra già di default
+            confirmSection.classList.remove('hidden');
+        }
+    </script>
 </body>
 </html>
