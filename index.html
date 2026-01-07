@@ -96,10 +96,8 @@
    <script>
         // Legge i parametri
         const params = new URLSearchParams(window.location.search);
-        alert('Code: ' + params.get('code') + '\nType: ' + params.get('type'));
-       
         const code = params.get('code');
-        const type = params.get('type');
+        const action = params.get('action');
         const error = params.get('error');
 
         const confirmSection = document.getElementById('confirm-section');
@@ -108,7 +106,7 @@
         const resetButton = document.getElementById('reset-button');
         const manualLink = document.getElementById('manual-link');
 
-        if (code && type === 'recovery') {
+      if (code && action === 'reset') {
             // C'è un code = reset password
             confirmSection.classList.add('hidden');
             resetSection.classList.remove('hidden');
