@@ -94,9 +94,10 @@
     </div>
 
    <script>
-        alert('Code: ' + params.get('code') + '\nType: ' + params.get('type'));
         // Legge i parametri
         const params = new URLSearchParams(window.location.search);
+        alert('Code: ' + params.get('code') + '\nType: ' + params.get('type'));
+       
         const code = params.get('code');
         const type = params.get('type');
         const error = params.get('error');
